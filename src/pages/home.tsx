@@ -3,6 +3,7 @@ import { featuredItems, programs } from "@/constants";
 import sss from "@/assets/sss.jpg";
 import { Card } from "@/components/ui/card";
 import { FaChevronRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 const Home = () => {
     return (
@@ -13,9 +14,11 @@ const Home = () => {
                     <p className="text-mute-foreground">
                         Sport soliq - bu sizning soligiz uchun eng kereklik va yaxshi karsa 
                     </p>
+                    <Link to={"/auth"}> 
                     <Button className="w-fit mt-6 font-bold h-12" size={'lg'}>
                         Join club now
                     </Button>
+                    </Link>
                     <div className="mt-24">
                         <p className="text-mute-foreground">AS FEATURE IN</p>
                         <div className="flex items-center gap-4 mt-2">
