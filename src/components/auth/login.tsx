@@ -1,38 +1,83 @@
 import { useAuthState } from "@/stores/auth.store";
-import { Separator } from "../ui/separator";
 import { Input } from "../ui/input";
+import { Separator } from "../ui/separator";
 import { Button } from "../ui/button";
+import { z } from "zod";
+import { loginSchema } from "@/lib/validation";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from "react-hook-form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
 
-const Login = () => {
+const Register = () => {
     const { setAuth } = useAuthState();
 
-    return (
-        <div className="flex flex-col">
-            <h2 className="text-xl font-bold">Login</h2>
-            <p className="text-muted-foreground">
-                Don't have an account?{''}
-                <span className="text-blue-500 cursor-pointer hover:underline"
-                onClick={() => setAuth('register')} >
-                    Sing up
-                </span>
-            </p>
-            <Separator className="my-3" />
-            <div>
-                <span>Email</span>
-                <Input placeholder='example@gmail.com' />
+        const form = useForm<z.infer<typeof loginSchema>>({
+            resolver: zodResolver(loginSchema),
+            defaultValues: {
+                email: "",
+                password: "",
+            },
+        });
+    
+    
+        const onSubmit = async (values: z.infer<typeof loginSchema>) => {         
+            const { email, password } = values;
+            console.log('Form values:', values);
+            // Add your login logic here
+        };
+        
+    
+
+        return (
+            <div className="flex flex-col">
+                <h2 className="text-xl font-bold">Login</h2>
+                <p className="text-muted-foreground">
+                    Already have an account?{' '}
+                    <span
+                        className="text-blue-500 cursor-pointer hover:underline"
+                        onClick={() => setAuth('login')}
+                    >
+                        Sign up
+                    </span>
+                </p>
+                <Separator className="my-3" />
+                
+                <Form {...form}>
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+                        <FormField
+                            control={form.control}
+                            name="email"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Email address</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="example@example.com" {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+
+                        <FormField
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <FormLabel>Password</FormLabel>
+                                    <FormControl>
+                                        <Input placeholder="*******" type='password' {...field} />
+                                    </FormControl>
+                                    <FormMessage />
+                                </FormItem>
+                            )}
+                        />
+                        <div>
+                        <Button type="submit" className="h-12 w-full mt-2">Submit</Button>
+                        </div>
+                    </form>
+                </Form>
             </div>
-            <div className="grid grid-cols-2 gap-4 mt-2">
-            <div className="mt-2">
-                <span>Password</span>
-                <Input placeholder='********' type='password' />
-            </div>
-            <div className="mt-2">
-                <span>Confirm password</span>
-                <Input placeholder='********' type='password' />
-            </div>
-            </div>
-            <Button className="w-full h-12 mt-2">Sing up</Button>
-        </div>
-    )
-}
-export default Login;
+        )
+    }
+        
+export default Register;

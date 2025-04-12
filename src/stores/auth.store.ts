@@ -9,6 +9,6 @@ interface IAuthStateStore {
 }
 
 export const useAuthState = create<IAuthStateStore>((set) => ({
-    authState: 'login',
-    setAuth: state => set({ authState: state }),
-  }));
+  authState: 'login' as AuthStore,
+  setAuth: (state: AuthStore) => set({ authState: state }),
+}));
