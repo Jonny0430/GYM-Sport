@@ -12,7 +12,7 @@ export const registerSchema = z
         password: z.string().min(8),
         confirmPassword: z.string().min(8),
     })
-    .refine(data => data.password === data.confirmPassword, {
+    .refine((data) => data.password === data.confirmPassword, {
         message: "Password don't match",
         path: ["confirmPassword"],
     })
