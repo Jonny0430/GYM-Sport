@@ -16,3 +16,8 @@ export const registerSchema = z
         message: "Password don't match",
         path: ["confirmPassword"],
     })
+
+
+export const taskSchema = z.object({
+    title: z.string().max(15),
+})

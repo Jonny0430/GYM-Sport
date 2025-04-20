@@ -27,7 +27,9 @@ const Register = () => {
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
+	const { setUser } = useAuthState()
 	const navigate = useNavigate()
+	
 
 	const form = useForm<z.infer<typeof registerSchema>>({
 		resolver: zodResolver(registerSchema),
@@ -40,6 +42,7 @@ const Register = () => {
 
 		try {
 			const res = await createUserWithEmailAndPassword (auth, email, password)
+			setUser(res.user)
 			navigate('/')
 		}catch (error) {
 			const result = error as Error

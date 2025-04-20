@@ -23,6 +23,7 @@ const Login = () => {
     const { setAuth } = useAuthState();
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
+    const { setUser } = useAuthState()
     const navigate = useNavigate()
 
         const form = useForm<z.infer<typeof loginSchema>>({
@@ -40,6 +41,10 @@ const Login = () => {
             setIsLoading(true);
 		try {
 			const res = await createUserWithEmailAndPassword (auth, email, password)
+            setUser(res.user)
+            console.log('User created:', res.user);
+            res.user
+            setAuth('dashboard')
 			navigate('/')
 		}catch (error) {
 			const result = error as Error
