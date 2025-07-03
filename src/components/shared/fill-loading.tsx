@@ -1,5 +1,3 @@
-import { Skeleton } from "../ui/skeleton"
-import { RiLoader2Fill } from "react-icons/ri";
 
 
 

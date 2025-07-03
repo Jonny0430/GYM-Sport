@@ -7,23 +7,19 @@ import { loginSchema } from "@/lib/validation";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "../ui/form";
-import { useAuthState } from "@/stores/auth.store";
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, User } from 'firebase/auth'
 import { useState } from "react";
 import { auth } from "@/firebase";
 import { useNavigate } from "react-router";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { LuTriangleAlert } from "react-icons/lu";
-import Fill from "../shared/fill-loading";
 import FillLoading from "../shared/fill-loading";
 
 
 const Login = () => {
 
-    const { setAuth } = useAuthState();
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState('')
-    const { setUser } = useAuthState()
     const navigate = useNavigate()
 
         const form = useForm<z.infer<typeof loginSchema>>({
@@ -121,4 +117,12 @@ const Login = () => {
     }
         
 export default Login;
+
+function setUser(_user: User) {
+    throw new Error("Function not implemented.");
+}
+
+function setAuth(_arg0: string) {
+    throw new Error("Function not implemented.");
+}
 

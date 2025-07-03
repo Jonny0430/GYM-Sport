@@ -3,9 +3,8 @@ import { Button } from "../ui/button"
 import { Separator } from "../ui/separator"
 import { useNavigate } from "react-router-dom"
 import { auth } from "@/firebase"
-import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "firebase/auth"
-import { useState } from "react"
-import FillLoading from "../shared/fill-loading"
+import { GithubAuthProvider, GoogleAuthProvider, signInWithPopup, } from "firebase/auth"
+
 
 const  Social = () => {
     // const [isLoading, setIsLoading] = useState(false)

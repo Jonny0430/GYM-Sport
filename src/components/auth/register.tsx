@@ -1,5 +1,4 @@
 import { registerSchema } from '@/lib/validation'
-import { useAuthState } from '@/stores/auth.store'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -15,7 +14,7 @@ import {
 import { Input } from '../ui/input'
 import { Separator } from '../ui/separator'
 import { useState } from 'react'
-import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { createUserWithEmailAndPassword, User } from 'firebase/auth'
 import { auth } from '@/firebase'
 import { useNavigate } from 'react-router-dom'
 import { LuTriangleAlert } from 'react-icons/lu'
@@ -23,11 +22,9 @@ import { Alert, AlertDescription, AlertTitle } from '../ui/alert'
 import FillLoading from '../shared/fill-loading'
 
 const Register = () => {
-	const { setAuth } = useAuthState()
 
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState('')
-	const { setUser } = useAuthState()
 	const navigate = useNavigate()
 	
 
@@ -50,6 +47,10 @@ const Register = () => {
 	} finally {
 		setIsLoading(false)
 		}
+	}
+
+	function setAuth(_arg0: string): void {
+		throw new Error('Function not implemented.')
 	}
 
 	return (
@@ -132,3 +133,7 @@ const Register = () => {
 
 
 export default Register
+
+function setUser(_user: User) {
+	throw new Error('Function not implemented.')
+}

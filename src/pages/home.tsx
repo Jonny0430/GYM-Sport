@@ -3,89 +3,95 @@ import { featuredItems, programs } from "@/constants";
 import sss from "@/assets/sss.jpg";
 import { Card } from "@/components/ui/card";
 import { FaChevronRight } from "react-icons/fa";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useUserState } from "@/stores/user.store";
 import { CgGym } from "react-icons/cg";
 import { LogOut } from "lucide-react";
 import { auth } from "@/firebase";
-import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+	const { user, setUser } = useUserState();
+	const navigate = useNavigate();
 
-    const { user, setUser } = useUserState()
-    const navigate = useNavigate()
+	const onLogout = () => {
+		auth.signOut().then(() => {
+			setUser(null);
+			navigate("/auth");
+		});
+	};
 
-    const onLogout = () => {
-        auth.signOut().then(() => {
-            setUser(null)
-            navigate("/auth")
-        })
-    }
+	return (
+		<>
+			<div className="w-full h-screen flex items-center">
+				<div className="max-w-xl ml-60 flex h-full flex-col justify-center">
+					<h1 className="text-9xl font-semibold uppercase">Workout with me</h1>
+					<p className="text-mute-foreground">
+						Sport soliq — bu sizning sog‘lig‘ingiz uchun eng kerakli va foydali tanlov.
+					</p>
 
-    return (
-        <>
-            <div className="w-full h-screen flex items-center">
-                <div className="max-w-xl ml-60 flex h-full flex-col justify-center">
-                    <h1 className="text-9xl font-semibold uppercase">Workout with me</h1>
-                    <p className="text-mute-foreground">
-                        Sport soliq - bu sizning soligiz uchun eng kereklik va yaxshi karsa 
-                    </p>
-                    {user ? (
-                            <div className="flex gap-4">
-                                <Link to={'/dashboard'}>
-                                    <Button className="w-fit mt-6 font-bold h-12" size={'lg'}>
-                                        <span>Go to GYM</span>
-                                        <CgGym className="h-5 w-5 ml-2" />
-                                    </Button>
-                                </Link>
-                                <Button className="w-fit mt-6 font-bold h-12" variant={'destructive'} size={'lg'} onClick={onLogout}>
-                                        <span>Logout</span>
-                                        <LogOut className="h-5 w-5 ml-2" />
-                                </Button>
-                            </div>
-                        ) : (
-                            <Link to={"/auth"}>
-                                <Button className="w-fit mt-6 font-bold h-12" size={'lg'}>
-                                    Join club now
-                                </Button>
-                            </Link>
-                        )}
-                    <div className="mt-24">
-                        <p className="text-mute-foreground">AS FEATURE IN</p>
-                        <div className="flex items-center gap-4 mt-2">
-                            {featuredItems.map((Icon, index) => (
-                                <Icon key={index} className="w-12 h-12" />
-                            ))}
-                        </div>
-                    </div>
-                </div>
-                <img src={sss} className="h-20px mt-11 ml-12 w-27"/>
-                </div>
-                
+					{user ? (
+						<div className="flex gap-4">
+							<Link to={"/dashboard"}>
+								<Button className="w-fit mt-6 font-bold h-12" size={"lg"}>
+									<span>Go to GYM</span>
+									<CgGym className="h-5 w-5 ml-2" />
+								</Button>
+							</Link>
+							<Button
+								className="w-fit mt-6 font-bold h-12"
+								variant={"destructive"}
+								size={"lg"}
+								onClick={onLogout}
+							>
+								<span>Logout</span>
+								<LogOut className="h-5 w-5 ml-2" />
+							</Button>
+						</div>
+					) : (
+						<Link to={"/auth"}>
+							<Button className="w-fit mt-6 font-bold h-12" size={"lg"}>
+								Join club now
+							</Button>
+						</Link>
+					)}
 
-                <div className="container max-w-5xl mx-auto">
-                    <h1 className="text-4xl">Not sure where to start?</h1>
-                    <p className="mt-2 text-muted-foreground">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.
-                        </p>
-                        <div className="grid grid-cols-3 gap-4 my-8">
-                        {programs.map(item => (
-                        <Card key={item.title} className="p-8 relative cursor-pointer grup-hover">
-                            <h3>{item.title}</h3>
-                            <p className="text-sm text-muted-foreground">{item.descr}</p>
-                            <Button size={'icon'} variant={'ghost'} className="absolute right-0 top-1/2 group-hover:translate-x-3 transition-transform">
-                            <FaChevronRight />
-                            </Button>
-                        </Card>
-                        ))}
-                        </div>
-                </div>
-        </>
-    )
-}
+					<div className="mt-24">
+						<p className="text-mute-foreground">AS FEATURED IN</p>
+						<div className="flex items-center gap-4 mt-2">
+							{featuredItems.map((Icon, index) => (
+								<Icon key={index} className="w-12 h-12" />
+							))}
+						</div>
+					</div>
+				</div>
+
+				<img src={sss} alt="promo" className="h-[200px] mt-11 ml-12 w-[270px]" />
+			</div>
+
+			<div className="container max-w-5xl mx-auto">
+				<h1 className="text-4xl">Not sure where to start?</h1>
+				<p className="mt-2 text-muted-foreground">
+					Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatibus.
+				</p>
+
+				<div className="grid grid-cols-3 gap-4 my-8">
+					{programs.map((item) => (
+						<Card key={item.title} className="p-8 relative cursor-pointer group-hover">
+							<h3>{item.title}</h3>
+							<p className="text-sm text-muted-foreground">{item.descr}</p>
+							<Button
+								size={"icon"}
+								variant={"ghost"}
+								className="absolute right-0 top-1/2 group-hover:translate-x-3 transition-transform"
+							>
+								<FaChevronRight />
+							</Button>
+						</Card>
+					))}
+				</div>
+			</div>
+		</>
+	);
+};
 
 export default Home;
-
-function setUser(arg0: null) {
-    throw new Error("Function not implemented.");
-}
