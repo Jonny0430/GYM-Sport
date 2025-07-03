@@ -6,16 +6,14 @@ import { useState } from "react"
 import { Form, FormControl, FormField, FormItem, FormMessage } from "../ui/form"
 import { Input } from "../ui/input"
 import { Button } from "../ui/button"
-import { addDoc, collection } from "@firebase/firestore"
 import { useUserState } from "@/stores/user.store"
-import { db } from "@/firebase"
 import { toast } from "sonner"
 
 interface Props {
     title?: string
     isEdit?: boolean
     onClose?: () => void
-    handler: (values: z.infer<typeof taskSchema>) => Promise<void | null>
+    handler: (values: z.infer<typeof taskSchema>) => Promise<void>
 }
 
 const TaskForm = ({ title = '', handler }: Props) => {

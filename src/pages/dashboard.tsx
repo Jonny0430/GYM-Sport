@@ -1,30 +1,65 @@
 import TaskForm from "@/components/forms/task-form"
+import FillLoading from "@/components/shared/fill-loading"
 import TaskItem from "@/components/shared/task-item"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { db } from "@/firebase"
 import { taskSchema } from "@/lib/validation"
+import { TaskService } from "@/service/task.service"
 import { useUserState } from "@/stores/user.store"
 import { Separator } from "@radix-ui/react-dropdown-menu"
-import { addDoc, collection } from "firebase/firestore"
+import { useQuery } from "@tanstack/react-query"
+import { addDoc, collection} from "firebase/firestore"
 import { BadgePlus } from "lucide-react"
 import { useState } from "react"
+import { LuTriangleAlert } from "react-icons/lu"
 import { z } from "zod"
 
 const Dashboard = () => {
     const { user } = useUserState()
     const [open, setOpen] = useState(false)
 
+    const {isPending, error, data, refetch } = useQuery({
+        queryKey: ['task-data'],
+        queryFn: TaskService.getTasks,
+        })
+
+        console.log('data', data)
+
+
+    // const onAdd = async ({ title }: z.infer<typeof taskSchema>) => {
+    //     if (!user) return null
+    //     return addDoc(collection(db, 'tasks'), {
+    //         title,
+    //         status: 'unstarted',
+    //         startTime: null,
+    //         endTime: null,
+    //         userId: user.uid,
+    //     })
+    //     .then(() => refetch())
+    //     .finally(() => setOpen(false))
+    // }
     const onAdd = async ({ title }: z.infer<typeof taskSchema>) => {
-        if (!user) return null
-        return addDoc(collection(db, 'tasks'), {
+        if (!user) return 
+      
+        try {
+          await addDoc(collection(db, 'tasks'), {
             title,
             status: 'unstarted',
             startTime: null,
             endTime: null,
-            userId: user?.uid,
-        }).then(() => setOpen(false))
-    }
+            userId: user.uid,
+          })
+      
+          await refetch()
+        } catch (err) {
+          console.error("Xatolik:", err)
+        } finally {
+          setOpen(false)
+        }
+      }
+      
 
     return (
         <div className="h-screen max-w-6xl mx-auto flex items-center">
@@ -38,16 +73,26 @@ const Dashboard = () => {
                        
                     </div>
                     <Separator />
-                    <div className="w-full p-4 rounded-md flex justify-between bg-gradient-to-b from-background to-secondary relative min-h-60">
-                        <div className="flex flex-col space-y-3 w-full">
-                            {Array.from({length: 3}).map((_, idx) => (
-                            <TaskItem />
-                        ))}
-                        </div> 
+                    <div className="w-full p-4 rounded-md flex justify-between bg-gradient-to-b from-background to-secondary relative min-h-60 ">
+                        {isPending && <FillLoading />}
+                        {error && (
+                             <Alert variant="destructive" className="w-full">
+                                    <LuTriangleAlert className="h-4 w-4" />
+                                      <AlertTitle>Error</AlertTitle>
+                                      <AlertDescription>
+                                        {error.message}
+                                    </AlertDescription>
+                             </Alert>
+                        )}
+                        {data && (
+                             <div className="flex flex-col space-y-3 w-full">
+                            {data.tasks.map(task => <TaskItem key={task.id} task={task}/> )}
+                        </div>
+                        )}
                     </div>
                 </div>
 
-                <div className="flex flex-col space-y-3 relative w-full ">
+                <div className="flex flex-col space-y-3 w-full ">
                     <div className="p4 rounded-md bg-gradient-to-r from-blue-900 to-background relative h-24">
                         <div className="text-2xl font-bold ml-12 mt-3">Total week</div>
                         <div className="text-3xl font-bold ml-12">02:08:50</div>
@@ -71,7 +116,7 @@ const Dashboard = () => {
                                 <DialogTitle>Create a new task</DialogTitle>
                                 </DialogHeader>
                                 <Separator />
-                                <TaskForm handler={onAdd}/>
+                                <TaskForm handler={onAdd} />
                             </DialogContent>
                             </Dialog>
     </div>
